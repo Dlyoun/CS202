@@ -1,0 +1,173 @@
+\/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author david
+ */
+import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+
+public class program5 {
+    BinarySearchTree[] dictionary = new BinarySearchTree[26];//create array that will store alphabet
+    long wordsFound = 0;//label counter attributes
+    long wordsNotFound = 0;
+    long comparisonsOfWordsFound = 0;
+    long comparisonsOfWordsNotFound = 0;
+    /**
+     * @param args the command line arguments
+     * @throws java.io.IOException
+     */
+    public static void main(String[] args) throws IOException {
+        program5 ex = new program5();
+        ex.readTextFile();
+        ex.readfile();
+        ex.writeoutput();
+        
+        
+
+    }
+
+    /**
+     *Constructor to initialize dictionary array
+     */
+    public program5(){
+        for (int i = 0; i < dictionary.length; i++) {
+            dictionary[i] = new BinarySearchTree<String>();
+        }
+    }
+
+    /**
+     * Read a text file into an BST
+     *
+     */
+    public void readTextFile() {
+       try (FileInputStream inf = new FileInputStream(new File("random_dictionary.txt"))) {// create random dictionary file
+           char let;
+
+            String word = ""; //word to be processed
+
+            int n = 0;
+           
+            while ((n = inf.read()) != -1) {//read random_dictionary file into string parser
+
+                let = (char) n;
+
+                if (Character.isLetter(let)) {//if character is a letter make lovercase and add to string variable
+                    word += Character.toLowerCase(let);
+                }
+
+                if ((Character.isWhitespace(let) || let == '-') && !word.isEmpty()) {//if character is a space or hyphen and empty send prior word to binary search
+                        
+                    
+                    if (dictionary[(int) word.charAt(0) - 97].insert(word)){//.insert(str, word)) {//inserts the words in the dictionary file
+                       
+                    } else {
+                       
+                    }
+                    word = "";//clear string variable
+
+                }
+            }
+       
+       
+       
+            inf.close();
+       }
+       
+       
+       catch (IOException e){
+           e.printStackTrace();
+       }
+    }
+       
+    
+        
+    /**
+     * Read a text file into a string parser
+     */
+    public void readfile() {
+        int[] i = new int[1];//create accumulator 
+        
+
+        try (FileInputStream inf = new FileInputStream(new File("oliver.txt"))) {//create oliver file
+
+            char let;
+
+            String str = ""; //word to be processed
+
+            int n = 0;
+
+            while ((n = inf.read()) != -1) {//read oliver file into string parser
+
+                let = (char) n;
+
+                if (Character.isLetter(let)) {//if character is a letter make lovercase and add to string variable
+                    str += Character.toLowerCase(let);
+                }
+
+                if ((Character.isWhitespace(let) || let == '-') && !str.isEmpty()) {//if character is a space or hyphen and empty send prior word to binary search
+                    i[0]=0;
+                        
+                    
+                    if (dictionary[(int)str.charAt(0) - 97].search(str, i)){//.search(str, i)) {//compare the words in the oliver file to those in the dictionary
+                        wordsFound++;//increment words found
+                        comparisonsOfWordsFound += i[0]; //increase comparisons of words found
+
+                    } else {
+                        wordsNotFound++;//increment words not found
+                        comparisonsOfWordsNotFound += i[0]; //increase comparisons of words not found
+                       
+
+                    }
+                    str = "";//clear string variable
+
+                }
+
+            }
+            inf.close();
+            
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        
+    } 
+    
+     
+             
+
+
+    /**
+     * Print the program outputs
+     */
+        public void writeoutput() {//print averages 
+            System.out.println("The number of words found is "+ wordsFound);
+            System.out.println("The number of words not found is " +wordsNotFound);
+            System.out.println("The number of comparisons for words found is " +comparisonsOfWordsFound);
+            System.out.println("The number of comparisons for words not found is " + comparisonsOfWordsNotFound);
+
+        System.out.printf("The average number of comparisons for words found "
+                + ": %4.4f \n ", (double) comparisonsOfWordsFound / wordsFound);
+
+        System.out.printf("The average number of comparisons for words not found "
+                + ": %4.4f \n ", (double) comparisonsOfWordsNotFound / wordsNotFound);
+    }
+}
+
+
+/*
+The number of words found is 939674
+The number of words not found is 52466
+The number of comparisons for words found is 14344724
+The number of comparisons for words not found is 515894
+The average number of comparisons for words found : 15.2656 
+ The average number of comparisons for words not found : 9.8329 
+ BUILD SUCCESSFUL (total time: 11 seconds)
+
+*/
